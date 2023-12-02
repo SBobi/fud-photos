@@ -13,7 +13,11 @@ const settings = { timestampsInSnapshots: true };
 firestore.settings(settings);
 
 if (data && typeof data === "object") {
-  Object.keys(data).forEach((docKey) => {
+  const keys = Object.keys(data);
+  const numberOfItemsToProcess = Math.min(keys.length, 150);
+
+  for (let i = 0; i < numberOfItemsToProcess; i++) {
+    const docKey = keys[i];
     const plateData = data[docKey];
 
     firestore
@@ -26,5 +30,7 @@ if (data && typeof data === "object") {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
-  });
+  }
+} else {
+  console.error("Data is not an object.");
 }
